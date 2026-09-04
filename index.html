@@ -3,44 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <meta name="theme-color" content="#101820">
-  <title>Frontier Ashes — Mobile MVP</title>
+  <meta name="theme-color" content="#0b1013">
+  <title>Frontier Ashes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main id="game-shell">
     <canvas id="game" width="480" height="270"></canvas>
+
     <section id="hud">
-      <div class="status"><div class="bar hp"><span id="hp-fill"></span></div><span id="hp-text">100/100</span></div>
-      <div class="ammo">AMMO <b id="ammo-text">12/60</b></div>
-      <button id="inventory-btn" class="hud-btn">🎒</button>
-      <button id="pause-btn" class="hud-btn">Ⅱ</button>
+      <div class="hud-left">
+        <div class="profile">
+          <div class="profile-icon">FA</div>
+          <div class="bars">
+            <div class="bar hp"><span id="hp-fill"></span></div>
+            <span id="hp-text">100/100</span>
+          </div>
+        </div>
+        <div class="sector"><span class="dot"></span> WASTELAND · SECTOR 01</div>
+      </div>
+
+      <div class="hud-right">
+        <div class="weapon-card">
+          <span class="weapon-label">EQUIPPED</span>
+          <b>RUST PISTOL</b>
+          <span class="ammo">AMMO <strong id="ammo-text">12/60</strong></span>
+        </div>
+        <button id="inventory-btn" class="hud-btn" aria-label="Inventory">🎒</button>
+        <button id="pause-btn" class="hud-btn" aria-label="Pause">Ⅱ</button>
+      </div>
     </section>
+
     <section id="message"></section>
-    <div id="aim-zone" aria-label="Aim area"><div id="aim-reticle"></div></div>
-    <div id="aim-joystick" class="aim-joystick" aria-label="Aim joystick"><div id="aim-stick"></div></div>
-    <div id="joystick" class="joystick"><div id="stick"></div></div>
-    <button id="interact" class="interact hidden">OPEN</button>
-    <div id="actions">
-      <button id="reload" class="action small">↻</button>
-      <button id="dodge" class="action">🏃</button>
-      <button id="shoot" class="action shoot">●</button>
+
+    <div id="joystick" class="joystick" aria-label="Move joystick">
+      <div class="joy-ring"></div><div id="stick"></div>
     </div>
+
+    <button id="interact" class="interact hidden">OPEN</button>
+
+    <div id="actions">
+      <button id="reload" class="action small" aria-label="Reload">↻</button>
+      <button id="dodge" class="action" aria-label="Dodge">↯</button>
+      <button id="shoot" class="action shoot" aria-label="Aim and fire"><span class="crosshair">●</span></button>
+    </div>
+
+    <div class="control-hint">DRAG FIRE BUTTON TO AIM · RELEASE TO STOP</div>
+
     <div id="loot-panel" class="panel hidden">
-      <h2>Supply Crate</h2><div id="loot-list"></div>
+      <div class="panel-head"><div><span class="panel-kicker">SUPPLY CACHE</span><h2>Supply Crate</h2></div><span class="panel-count">LOOT</span></div>
+      <div id="loot-list"></div>
       <button id="take-all" class="primary">TAKE ALL</button>
       <button id="close-loot" class="secondary">CLOSE</button>
     </div>
-    <div id="inventory-panel" class="panel hidden">
-      <h2>Inventory</h2><div id="inventory-list"></div>
+
+    <div id="inventory-panel" class="panel inventory-panel hidden">
+      <div class="panel-head"><div><span class="panel-kicker">FIELD GEAR</span><h2>Inventory</h2></div><span class="panel-count">BACKPACK</span></div>
+      <div id="inventory-list"></div>
       <button id="close-inventory" class="secondary">CLOSE</button>
     </div>
+
     <div id="pause-panel" class="panel hidden">
-      <h2>PAUSED</h2><p>Frontier Ashes — Mobile MVP</p>
+      <div class="panel-head"><div><span class="panel-kicker">EXPEDITION</span><h2>PAUSED</h2></div></div>
+      <p>Frontier Ashes — survive the ruins.</p>
       <button id="resume" class="primary">RESUME</button>
     </div>
+
     <div id="start-screen">
-      <div class="title-card"><p class="eyebrow">MOBILE MVP</p><h1>FRONTIER<br>ASHES</h1>
+      <div class="title-card">
+        <p class="eyebrow">WASTELAND EXPEDITION</p><h1>FRONTIER<br>ASHES</h1>
         <p>Survive the ruins. Build what remains.</p>
         <button id="start" class="primary">START EXPEDITION</button>
       </div>
