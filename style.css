@@ -43,3 +43,13 @@ button{font:inherit;color:#fff;border:0;cursor:pointer;touch-action:none}
 .panel{width:min(92vw,680px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 12px);padding:9px}.panel h2{font-size:15px}.panel p{font-size:12px;margin:5px 0}.panel-head{margin-bottom:5px}.panel-count,.panel-kicker{font-size:7px}.primary,.secondary{padding:9px;margin-top:5px;min-height:44px}.loot-row,.inv-row{padding:5px 6px;font-size:10px}.loot-row .rarity,.inv-row small{font-size:8px}
 #start-screen{padding:8px}.title-card{width:min(76vw,400px);max-height:calc(100dvh - 16px);overflow:auto;padding:13px}.eyebrow{font-size:8px}.title-card h1{font-size:clamp(30px,7.5vw,46px);margin:4px 0 9px}.title-card p{font-size:11px;margin:6px 0 10px}
 }
+
+/* Extra-short landscape phones: keep touch targets usable while tightening only the surrounding UI. */
+@media (orientation:landscape) and (max-height:450px){
+#hud{top:4px;left:6px;right:6px}.hud-left,.hud-right{gap:3px}.profile{padding:2px 4px 2px 2px}.profile-icon{width:24px;height:24px}.bars{width:96px}.bar{height:8px}.bars>span{font-size:8px}.sector{font-size:7px}.weapon-card{min-width:104px;padding:3px 5px}.weapon-card b{font-size:9px}.weapon-card .ammo{font-size:7px}.hud-btn{width:36px;height:34px;font-size:15px}
+.joystick{left:8px;bottom:6px;width:82px;height:82px}.joy-ring{inset:10px}#stick{width:40px;height:40px;margin:-20px}
+#actions{right:7px;bottom:6px;gap:5px}.action{width:46px;height:46px;font-size:20px}.action.small{width:42px;height:42px;font-size:19px}.action.shoot{width:62px;height:62px;font-size:23px}
+.interact{bottom:12%;padding:8px 11px;font-size:11px}
+.panel{width:min(94vw,700px);max-width:calc(100vw - 12px);max-height:calc(100dvh - 8px);padding:8px}.panel h2{font-size:14px}.panel p{font-size:11px}.primary,.secondary{min-height:44px;padding:8px}.loot-row,.inv-row{padding:4px 5px;font-size:10px}
+#start-screen{padding:6px}.title-card{width:min(72vw,390px);max-height:calc(100dvh - 12px);padding:10px}.title-card h1{font-size:clamp(28px,7vw,42px);margin:3px 0 7px}.title-card p{font-size:10px;margin:4px 0 7px}
+}
