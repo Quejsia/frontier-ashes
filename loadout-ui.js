@@ -40,6 +40,7 @@
 
   let selectedWeapon=null;
   const rarityColor=name=>({Common:'#d3d6d8',Uncommon:'#69c875',Epic:'#bc7bf1',Legendary:'#f1a24b',Mythic:'#e754d8',Secret:'#44d8ef',Special:'#ffe66b'})[name]||'#fff';
+  function ensureSelectedWeapon(){if(selectedWeapon===null||!stash.weapons[selectedWeapon])selectedWeapon=stash.weapons.length?0:null}
   function renderStash(){
     const el=document.getElementById('stash-list');
     const weapons=stash.weapons.map(w=>`<div class="stash-row"><span>🔫 ${w.name}<small class="rarity" style="color:${rarityColor(w.rarity)}"> ${w.rarity}</small></span><b>INSURED</b></div>`).join('');
@@ -48,32 +49,37 @@
     el.innerHTML=(weapons+ammo+items)||'<p class="raid-sub">Your stash is empty.</p>';
   }
   function renderWeapons(){
+    ensureSelectedWeapon();
     const el=document.getElementById('weapon-list');
     if(!stash.weapons.length){el.innerHTML='<p class="raid-sub">No weapons available. A starter Rust Pistol should be in your stash.</p>';return;}
     el.innerHTML=stash.weapons.map((w,i)=>`<button class="weapon-choice ${selectedWeapon===i?'selected':''}" data-index="${i}"><b>🔫 ${w.name}</b><small class="rarity" style="color:${rarityColor(w.rarity)}">${w.rarity}</small><small>${w.ammo||'9mm Ammo'}</small></button>`).join('');
     el.querySelectorAll('[data-index]').forEach(b=>b.onclick=()=>{selectedWeapon=Number(b.dataset.index);renderWeapons();renderSummary()});
   }
   function renderSummary(){
+    ensureSelectedWeapon();
     const s=document.getElementById('loadout-summary'),input=document.getElementById('starting-ammo');
     if(selectedWeapon===null||!stash.weapons[selectedWeapon]){s.innerHTML='Select a weapon from your stash.';input.max=1;input.value=1;return;}
     const w=stash.weapons[selectedWeapon],type=w.ammo||'9mm Ammo',available=Math.max(0,Number(stash.ammo[type]||0));input.max=Math.max(1,available);if(Number(input.value)>available)input.value=available||1;
     s.innerHTML=`<b>INSURED LOADOUT</b><br>🔫 ${w.name} <span class="rarity" style="color:${rarityColor(w.rarity)}">${w.rarity}</span><br>💥 ${type}: ${available} in stash`;
   }
   function showView(name){
+    if(name==='loadout'||name==='deploy')ensureSelectedWeapon();
     menu.querySelectorAll('.raid-view').forEach(v=>v.classList.remove('active'));document.getElementById(name+'-view').classList.add('active');
     menu.querySelectorAll('.raid-nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
     if(name==='stash')renderStash();if(name==='loadout'){renderWeapons();renderSummary()};if(name==='deploy')renderDeploy();
   }
   function renderDeploy(){
+    ensureSelectedWeapon();
     const el=document.getElementById('deploy-summary');if(selectedWeapon===null||!stash.weapons[selectedWeapon]){el.innerHTML='No weapon selected.';return;}
     const w=stash.weapons[selectedWeapon],type=w.ammo||'9mm Ammo',amount=Number(document.getElementById('starting-ammo').value)||0;
     el.innerHTML=`<b>READY TO DEPLOY</b><br><br>🔫 ${w.name} · <span class="rarity" style="color:${rarityColor(w.rarity)}">${w.rarity}</span><br>💥 ${type} × ${amount}<br><br>🛡 INSURED WEAPON`;
   }
   function prepareLoadout(){
-    if(selectedWeapon===null||!stash.weapons[selectedWeapon]){showView('loadout');return false;}
+    ensureSelectedWeapon();
+    if(selectedWeapon===null||!stash.weapons[selectedWeapon]){showView('loadout');showMessage('Select a weapon before deploying');return false;}
     const w=stash.weapons[selectedWeapon],type=w.ammo||'9mm Ammo',available=Number(stash.ammo[type]||0),amount=Math.floor(Number(document.getElementById('starting-ammo').value)||0);
-    if(available<1){showMessage('Not enough '+type+' in stash');return false;}
-    if(amount<1||amount>available){showMessage('Choose 1–'+available+' starting ammo');return false;}
+    if(available<1){showMessage('Not enough '+type+' in stash');showView('loadout');return false;}
+    if(amount<1||amount>available){showMessage('Choose 1–'+available+' starting ammo');showView('loadout');return false;}
     loadout={weapon:{...w},ammoType:type,ammo:amount,insured:true};
     stash.ammo[type]=available-amount;saveStash();
     raidInventory=emptyRaidInventory();raid={active:false,status:'loadout',extracted:false,extractionProgress:0,extractionPoint:null};
@@ -86,7 +92,7 @@
     raid.active=true;raid.status='active';running=true;paused=false;menu.style.display='none';screen.style.display='none';showMessage('Deployed with insured '+w.name+'.');
     return true;
   }
-  function openMenu(){running=false;paused=false;screen.style.display='none';menu.style.display='grid';showView('loadout');}
+  function openMenu(){ensureSelectedWeapon();running=false;paused=false;screen.style.display='none';menu.style.display='grid';showView('loadout');}
   oldStart.onclick=openMenu;
   menu.querySelectorAll('.raid-nav button').forEach(b=>b.onclick=()=>b.dataset.view==='deploy'?showView('deploy'):showView(b.dataset.view));
   document.getElementById('stash-back').onclick=()=>showView('loadout');
@@ -96,9 +102,8 @@
   document.getElementById('starting-ammo').oninput=renderDeploy;
   document.getElementById('deploy-now').onclick=prepareLoadout;
 
-  // Replace the original single START EXPEDITION action with the requested three-entry main menu.
   titleCard.innerHTML=`<p class="eyebrow">WASTELAND SAFEHOUSE</p><h1>FRONTIER<br>ASHES</h1><p>Prepare your gear. Choose your loadout. Enter the raid.</p><div class="main-menu-actions"><button class="primary" id="main-stash">STASH</button><button class="primary" id="main-loadout">LOADOUT</button><button class="primary" id="main-raid">START RAID</button></div>`;
   document.getElementById('main-stash').onclick=()=>{screen.style.display='none';menu.style.display='grid';showView('stash')};
-  document.getElementById('main-loadout').onclick=()=>{screen.style.display='none';menu.style.display='grid';showView('loadout')};
-  document.getElementById('main-raid').onclick=()=>prepareLoadout();
+  document.getElementById('main-loadout').onclick=()=>openMenu();
+  document.getElementById('main-raid').onclick=()=>{openMenu();prepareLoadout()};
 })();
