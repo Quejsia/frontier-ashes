@@ -99,6 +99,6 @@
   // Replace the original single START EXPEDITION action with the requested three-entry main menu.
   titleCard.innerHTML=`<p class="eyebrow">WASTELAND SAFEHOUSE</p><h1>FRONTIER<br>ASHES</h1><p>Prepare your gear. Choose your loadout. Enter the raid.</p><div class="main-menu-actions"><button class="primary" id="main-stash">STASH</button><button class="primary" id="main-loadout">LOADOUT</button><button class="primary" id="main-raid">START RAID</button></div>`;
   document.getElementById('main-stash').onclick=()=>{screen.style.display='none';menu.style.display='grid';showView('stash')};
-  document.getElementById('main-loadout').onclick=()=>openMenu();
-  document.getElementById('main-raid').onclick=()=>openMenu();
+  document.getElementById('main-loadout').onclick=()=>{screen.style.display='none';menu.style.display='grid';showView('loadout')};
+  document.getElementById('main-raid').onclick=()=>prepareLoadout();
 })();
