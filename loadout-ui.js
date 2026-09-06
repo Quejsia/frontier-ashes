@@ -83,6 +83,9 @@
     loadout={weapon:{...w},ammoType:type,ammo:amount,insured:true};
     stash.ammo[type]=available-amount;saveStash();
     raidInventory=emptyRaidInventory();raid={active:false,status:'loadout',extracted:false,extractionProgress:0,extractionPoint:null};
+    // game-v3 reset() still references the legacy inventoryHTML global.
+    // Create that harmless legacy value before reset so deployment cannot crash.
+    if(typeof inventoryHTML==='undefined')globalThis.inventoryHTML='';
     reset();
     ownedWeapons.push({name:w.name,rarity:w.rarity,ammo:type});inv.Weapons=1;
     Object.keys(inv).forEach(k=>{if(k!=='Weapons')inv[k]=0});inv[type]=amount;
