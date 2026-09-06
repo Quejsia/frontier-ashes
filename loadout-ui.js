@@ -14,7 +14,6 @@
   .weapon-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:38vh;overflow:auto}.weapon-choice{text-align:left;min-height:66px}.weapon-choice b{display:block;font-size:12px}.weapon-choice small{display:block;color:#aeb8ba;margin-top:3px}.weapon-choice .rarity{font-size:9px;letter-spacing:1px;text-transform:uppercase}
   .loadout-summary{margin-top:10px;padding:10px;background:#0c1316;border:1px solid #39464a;font-size:11px}.ammo-pick{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}.ammo-pick input{width:120px;background:#172125;color:#fff;border:2px solid #536168;border-radius:5px;padding:8px;font-weight:900}
   .raid-note{font-size:9px;color:#9ca8aa;margin:8px 0}.raid-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.raid-actions button{margin-top:0!important}
-  .main-menu-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.main-menu-actions button{margin-top:0!important}
   @media(max-height:420px){#raid-menu{padding:8px}.raid-card{padding:11px;max-height:94vh}.raid-card h2{font-size:19px}.weapon-grid{max-height:34vh}.stash-grid{max-height:40vh}.raid-nav button,.weapon-choice{padding:7px}}
   `;
   document.head.appendChild(style);
@@ -22,7 +21,6 @@
   const screen=document.getElementById('start-screen');
   if(!screen)return;
   const oldStart=document.getElementById('start');
-  const titleCard=screen.querySelector('.title-card');
   const menu=document.createElement('div');menu.id='raid-menu';menu.style.display='none';
   menu.innerHTML=`<div class="raid-card">
     <span class="raid-kicker">FRONTIER ASHES · SAFEHOUSE</span><h2>RAID PREPARATION</h2><p class="raid-sub">Prepare your insured gear before entering the wasteland.</p>
@@ -83,8 +81,6 @@
     loadout={weapon:{...w},ammoType:type,ammo:amount,insured:true};
     stash.ammo[type]=available-amount;saveStash();
     raidInventory=emptyRaidInventory();raid={active:false,status:'loadout',extracted:false,extractionProgress:0,extractionPoint:null};
-    // game-v3 reset() still references the legacy inventoryHTML global.
-    // Create that harmless legacy value before reset so deployment cannot crash.
     if(typeof inventoryHTML==='undefined')globalThis.inventoryHTML='';
     reset();
     ownedWeapons.push({name:w.name,rarity:w.rarity,ammo:type});inv.Weapons=1;
@@ -96,17 +92,19 @@
     return true;
   }
   function openMenu(){ensureSelectedWeapon();running=false;paused=false;screen.style.display='none';menu.style.display='grid';showView('loadout');}
-  oldStart.onclick=openMenu;
+
+  // Keep the original MVP START EXPEDITION screen. The button now reliably
+  // opens the Safehouse instead of being replaced/detached after binding.
+  if(oldStart){
+    oldStart.onclick=openMenu;
+    oldStart.addEventListener('pointerup',e=>{if(e.pointerType==='touch'){e.preventDefault();openMenu()}});
+  }
+
   menu.querySelectorAll('.raid-nav button').forEach(b=>b.onclick=()=>b.dataset.view==='deploy'?showView('deploy'):showView(b.dataset.view));
   document.getElementById('stash-back').onclick=()=>showView('loadout');
-  document.getElementById('loadout-back').onclick=()=>{menu.style.display='grid';showView('stash')};
+  document.getElementById('loadout-back').onclick=()=>showView('stash');
   document.getElementById('deploy-back').onclick=()=>showView('loadout');
   document.getElementById('deploy-btn').onclick=()=>prepareLoadout();
   document.getElementById('starting-ammo').oninput=renderDeploy;
   document.getElementById('deploy-now').onclick=prepareLoadout;
-
-  titleCard.innerHTML=`<p class="eyebrow">WASTELAND SAFEHOUSE</p><h1>FRONTIER<br>ASHES</h1><p>Prepare your gear. Choose your loadout. Enter the raid.</p><div class="main-menu-actions"><button class="primary" id="main-stash">STASH</button><button class="primary" id="main-loadout">LOADOUT</button><button class="primary" id="main-raid">START RAID</button></div>`;
-  document.getElementById('main-stash').onclick=()=>{screen.style.display='none';menu.style.display='grid';showView('stash')};
-  document.getElementById('main-loadout').onclick=()=>openMenu();
-  document.getElementById('main-raid').onclick=()=>{openMenu();prepareLoadout()};
 })();
