@@ -93,8 +93,11 @@
   }
   function openMenu(){ensureSelectedWeapon();running=false;paused=false;screen.style.display='none';menu.style.display='grid';showView('loadout');}
 
-  // Keep the original MVP START EXPEDITION screen. The button now reliably
-  // opens the Safehouse instead of being replaced/detached after binding.
+  // Expose the safehouse entry point so the mobile start bridge can call it
+  // even when another legacy script has attached its own START handler.
+  globalThis.openRaidMenu=openMenu;
+  globalThis.prepareRaidLoadout=prepareLoadout;
+
   if(oldStart){
     oldStart.onclick=openMenu;
     oldStart.addEventListener('pointerup',e=>{if(e.pointerType==='touch'){e.preventDefault();openMenu()}});
