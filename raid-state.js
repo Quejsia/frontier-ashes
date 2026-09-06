@@ -72,18 +72,19 @@ function saveStash() {
   }
 }
 
-// Give a first-time player a basic insured weapon so the upcoming loadout
-// screen has something selectable. Existing saved stashes are never changed.
+// Give a first-time player a basic insured weapon and enough starter ammo to deploy.
+// Existing saved stashes keep their weapons, but a missing/empty 9mm supply is
+// repaired so a Rust Pistol can always be deployed instead of being stuck at 0 ammo.
 function ensureStarterStash() {
-  if (stash.weapons.length > 0) return;
+  if (stash.weapons.length === 0) {
+    stash.weapons.push({
+      name: 'Rust Pistol',
+      rarity: 'Common',
+      ammo: '9mm Ammo'
+    });
+  }
 
-  stash.weapons.push({
-    name: 'Rust Pistol',
-    rarity: 'Common',
-    ammo: '9mm Ammo'
-  });
-
-  if (typeof stash.ammo['9mm Ammo'] !== 'number') {
+  if (typeof stash.ammo['9mm Ammo'] !== 'number' || stash.ammo['9mm Ammo'] < 1) {
     stash.ammo['9mm Ammo'] = 60;
   }
 
