@@ -16,6 +16,8 @@ const legacyScripts = [
   'loadout-ui.js',
   'loadout-bridge.js',
   'weapon-loadout.js',
+  'field-interactions.js',
+  'joystick-visual-fix.js',
   'start-fix.js'
 ];
 
