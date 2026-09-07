@@ -1,1 +1,24 @@
 @media (max-width:700px){#hud{top:7px;left:8px;right:8px}.profile{padding:3px 5px 3px 3px;border-width:1px}.profile-icon{width:24px;height:24px;font-size:8px}.bars{width:92px}.bar{height:8px}.bars>span{font-size:8px}.sector{display:none}.weapon-card{min-width:105px;padding:4px 6px;font-size:8px;border-width:1px}.weapon-card b{font-size:9px}.weapon-card .ammo{font-size:7px}.hud-btn{width:32px;height:31px;font-size:14px}.joystick{left:10px;bottom:10px;width:86px;height:86px;border-width:2px}.joy-ring{inset:10px}#stick{width:40px;height:40px;margin:-20px}.actions{right:9px;bottom:9px}.action{width:48px;height:48px;font-size:20px}.action.small{width:40px;height:40px}.action.shoot{width:66px;height:66px;font-size:23px}.control-hint{right:14px;bottom:80px;font-size:5px}.interact{padding:7px 11px;font-size:11px}.panel{width:min(84vw,420px);max-width:calc(100vw - 24px);max-height:72vh;padding:10px}.panel h2{font-size:16px}.panel p{font-size:11px}.panel-head{margin-bottom:6px}.panel-kicker,.panel-count{font-size:6px}.primary,.secondary{padding:8px;min-height:38px;font-size:12px}#loot-list,#inventory-list{grid-template-columns:1fr}.loot-row,.inv-row{padding:5px;font-size:10px}.title-card{width:min(82vw,360px);padding:16px}.title-card h1{font-size:clamp(30px,10vw,48px)}.title-card p{font-size:11px}.title-card .primary{min-height:40px}}@media (max-width:380px){.profile-icon{width:21px;height:21px}.bars{width:76px}.weapon-card{min-width:90px}.hud-btn{width:29px;height:28px}.joystick{width:78px;height:78px}.action{width:44px;height:44px}.action.small{width:37px;height:37px}.action.shoot{width:60px;height:60px}.control-hint{display:none}.panel{width:88vw}.title-card{width:86vw}}@media (orientation:landscape) and (max-height:600px){#hud{top:6px;left:8px;right:8px}.profile-icon{width:25px;height:25px}.bars{width:108px}.weapon-card{min-width:116px}.hud-btn{width:38px;height:36px}.joystick{left:11px;bottom:8px;width:88px;height:88px}#stick{width:42px;height:42px;margin:-21px}#actions{right:10px;bottom:8px}.action{width:48px;height:48px}.action.small{width:44px;height:44px}.action.shoot{width:64px;height:64px}.panel{width:min(92vw,680px);max-height:calc(100dvh - 12px);padding:9px}}@media (orientation:landscape) and (max-height:450px){.joystick{left:8px;bottom:6px;width:82px;height:82px}#actions{right:7px;bottom:6px}.action{width:46px;height:46px}.action.small{width:42px;height:42px}.action.shoot{width:62px;height:62px}.panel{width:94vw;padding:8px}}
+
+/* Phase 1, Commit 2: landscape HUD sizing correction.
+   Non-destructive CSS patch: keeps the existing HUD structure and behavior,
+   but makes the health/ammo overlays shrink with narrow landscape phones.
+*/
+@media (max-width:700px) and (orientation:landscape) and (max-height:600px){
+  #hud{min-width:0;overflow:hidden}
+  .hud-left,.hud-right{min-width:0}
+  .hud-left{flex:1 1 auto}
+  .hud-right{flex:0 1 auto}
+  .profile{min-width:0;flex:0 1 auto}
+  .bars{width:clamp(72px,14vw,108px);min-width:0;flex:0 1 auto}
+  .weapon-card{width:clamp(90px,15vw,116px);min-width:clamp(90px,15vw,116px);max-width:clamp(90px,15vw,116px);min-height:0;overflow:hidden}
+  .weapon-card b,.weapon-card .ammo{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+
+@media (max-width:380px) and (orientation:landscape) and (max-height:450px){
+  #hud{left:5px;right:5px}
+  .profile-icon{width:21px;height:21px}
+  .bars{width:clamp(68px,18vw,76px)}
+  .weapon-card{width:clamp(84px,22vw,90px);min-width:clamp(84px,22vw,90px);max-width:clamp(84px,22vw,90px);padding:3px 5px}
+  .hud-btn{width:29px;height:28px;font-size:14px}
+}
