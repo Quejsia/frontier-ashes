@@ -140,24 +140,18 @@
   }
   const take=document.getElementById('take-all');if(take){take.onclick=takeEverything;take.addEventListener('pointerup',e=>{if(e.pointerType==='touch'){e.preventDefault();takeEverything()}})}
 
-  // Weapon Status Indicator + Ammo Counter is the in-raid weapon switch button.
-  // Keep the switchWeapon function and Q shortcut, but remove the separate
-  // floating button so it cannot overlap the HUD.
+  // The Weapon Status Indicator + Ammo Counter is the in-raid weapon switch control.
+  // Keep switchWeapon and the Q shortcut; do not create a separate floating button.
   const weaponCard=document.querySelector('.weapon-card');
   if(weaponCard){
     weaponCard.setAttribute('role','button');
     weaponCard.setAttribute('tabindex','0');
     weaponCard.setAttribute('aria-label','Switch between Primary and Secondary weapon');
     weaponCard.title='Tap to switch between Primary and Secondary';
-    const activate=e=>{
-      if(e.type==='keydown'&&(e.key!=='Enter'&&e.key!==' '))return;
-      if(e.type==='keydown')e.preventDefault();
-      if(e.type==='pointerup'&&e.pointerType==='mouse')return;
-      switchWeapon();
-    };
     weaponCard.addEventListener('click',switchWeapon);
-    weaponCard.addEventListener('pointerup',activate);
-    weaponCard.addEventListener('keydown',activate);
+    weaponCard.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();switchWeapon()}
+    });
   }
   document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='q'){e.preventDefault();switchWeapon()}});
 
