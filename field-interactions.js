@@ -98,7 +98,7 @@
   function normalizeLoot(){
     if(!currentCrate)return [];
     if(Array.isArray(currentCrate.loot))return currentCrate.loot.map((item,i)=>({item,index:i}));
-    if(currentCrate.loot&&typeof currentCrate.loot==='object')return Object.entries(currentCrate.loot).map(([name,qty],i)=>({item:{type:name.includes('Ammo')?'ammo':(['Scrap','Canned Food','Medkit'].includes(name)?'item':'item'),name,qty:Number(qty)||0,rarity:{name:'Common'}},key:name,index:i}));
+    if(currentCrate.loot&&typeof currentCrate.loot==='object')return Object.entries(currentCrate.loot).map(([name,qty],i)=>({item:{type:name.includes('Ammo')?'ammo':'item',name,qty:Number(qty)||0,rarity:{name:'Common'}},key:name,index:i}));
     return [];
   }
   function label(item){return item.type==='weapon'?'🔫':item.type==='ammo'?'💥':item.name==='Medkit'?'🧰':item.name==='Canned Food'?'🥫':'🔩'}
@@ -128,9 +128,9 @@
     .fa-loot-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid #263338;min-width:0}
     .fa-loot-info{min-width:0}.fa-loot-info span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fa-loot-info small{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
     .fa-loot-row>b{white-space:nowrap}.fa-take{background:#1d292d;color:#fff;border:2px solid #536168;border-radius:5px;padding:6px 10px;font-weight:900;touch-action:manipulation}
-    .fa-switch{position:absolute;right:136px;top:14px;z-index:18;background:#1d292d;color:#fff;border:2px solid #536168;border-radius:7px;min-width:64px;height:48px;font-weight:900;box-shadow:0 4px 12px #0008;touch-action:manipulation}
-    .fa-switch small{display:block;font-size:7px;letter-spacing:1px;color:#aeb8ba}.fa-switch b{font-size:10px}
-    @media(max-width:700px){#loot-list{grid-template-columns:1fr}.fa-switch{right:136px;top:10px;min-width:58px;height:44px}.fa-loot-row{padding:9px 2px}}
+    .weapon-card{cursor:pointer;touch-action:manipulation}
+    .weapon-card:active{transform:scale(.98)}
+    @media(max-width:700px){#loot-list{grid-template-columns:1fr}.fa-loot-row{padding:9px 2px}}
   `;document.head.appendChild(style);
 
   // Replace the legacy loot renderer after all legacy scripts have loaded.
@@ -140,9 +140,25 @@
   }
   const take=document.getElementById('take-all');if(take){take.onclick=takeEverything;take.addEventListener('pointerup',e=>{if(e.pointerType==='touch'){e.preventDefault();takeEverything()}})}
 
-  const switchBtn=document.createElement('button');switchBtn.type='button';switchBtn.className='fa-switch';switchBtn.id='fa-switch-weapon';switchBtn.innerHTML='<small>WEAPON</small><b>SWITCH ↔</b>';document.getElementById('game-shell').appendChild(switchBtn);
-  switchBtn.onclick=switchWeapon;switchBtn.addEventListener('pointerup',e=>{if(e.pointerType==='touch'){e.preventDefault();switchWeapon()}});
-  const weaponCard=document.querySelector('.weapon-card');if(weaponCard){weaponCard.style.cursor='pointer';weaponCard.title='Tap to switch between Primary and Secondary';weaponCard.addEventListener('click',switchWeapon)}
+  // Weapon Status Indicator + Ammo Counter is the in-raid weapon switch button.
+  // Keep the switchWeapon function and Q shortcut, but remove the separate
+  // floating button so it cannot overlap the HUD.
+  const weaponCard=document.querySelector('.weapon-card');
+  if(weaponCard){
+    weaponCard.setAttribute('role','button');
+    weaponCard.setAttribute('tabindex','0');
+    weaponCard.setAttribute('aria-label','Switch between Primary and Secondary weapon');
+    weaponCard.title='Tap to switch between Primary and Secondary';
+    const activate=e=>{
+      if(e.type==='keydown'&&(e.key!=='Enter'&&e.key!==' '))return;
+      if(e.type==='keydown')e.preventDefault();
+      if(e.type==='pointerup'&&e.pointerType==='mouse')return;
+      switchWeapon();
+    };
+    weaponCard.addEventListener('click',switchWeapon);
+    weaponCard.addEventListener('pointerup',activate);
+    weaponCard.addEventListener('keydown',activate);
+  }
   document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='q'){e.preventDefault();switchWeapon()}});
 
   // When the loadout UI is opened, read its actual two slots so quick-switch follows swaps.
