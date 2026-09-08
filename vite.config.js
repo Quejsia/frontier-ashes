@@ -15,6 +15,7 @@ const legacyScripts = [
   'game-v3.js',
   'hud-state-adapter.js',
   'ui/hud.js',
+  'ui/controls.js',
   'loadout-ui.js',
   'loadout-bridge.js',
   'weapon-loadout.js',
