@@ -14,6 +14,7 @@ const legacyScripts = [
   'raid-state.js',
   'game-v3.js',
   'hud-state-adapter.js',
+  'ui/hud.js',
   'loadout-ui.js',
   'loadout-bridge.js',
   'weapon-loadout.js',
@@ -34,7 +35,9 @@ function copyLegacyScripts() {
     writeBundle() {
       mkdirSync(outputDir, { recursive: true });
       for (const file of legacyScripts) {
-        copyFileSync(resolve(projectRoot, file), resolve(outputDir, file));
+        const destination = resolve(outputDir, file);
+        mkdirSync(dirname(destination), { recursive: true });
+        copyFileSync(resolve(projectRoot, file), destination);
       }
     }
   };
