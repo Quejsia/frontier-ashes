@@ -13,6 +13,7 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 const legacyScripts = [
   'raid-state.js',
   'game-v3.js',
+  'loot-state-bridge.js',
   'hud-state-adapter.js',
   'ui/hud.js',
   'ui/controls.js',
