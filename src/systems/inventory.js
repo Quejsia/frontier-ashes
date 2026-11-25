@@ -24,6 +24,7 @@ export function storeLootItems(items){
     }else{
       const qty=Math.max(0,Number(item.qty)||0);
       inv[item.name]=(Number(inv[item.name])||0)+qty;
+      if(item.type==='ammo'&&typeof player!=='undefined'&&item.name===player.ammoType)player.reserve=(Number(player.reserve)||0)+qty;
       if(raid){
         if(!raid.ammo)raid.ammo={};
         if(!raid.items)raid.items={};
