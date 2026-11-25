@@ -93,3 +93,12 @@ function ensureStarterStash() {
 
 loadStash();
 ensureStarterStash();
+
+// `let` bindings in classic scripts are not globalThis properties, so ES modules
+// reading globalThis.raidInventory/stash/loadout/raid got undefined. Live accessors:
+Object.defineProperties(globalThis, {
+  stash: { get() { return stash; }, set(v) { stash = v; }, configurable: true },
+  raidInventory: { get() { return raidInventory; }, set(v) { raidInventory = v; }, configurable: true },
+  loadout: { get() { return loadout; }, set(v) { loadout = v; }, configurable: true },
+  raid: { get() { return raid; }, set(v) { raid = v; }, configurable: true }
+});
