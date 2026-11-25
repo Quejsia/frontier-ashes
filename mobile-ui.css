@@ -22,3 +22,14 @@
   .weapon-card{width:clamp(84px,22vw,90px);min-width:clamp(84px,22vw,90px);max-width:clamp(84px,22vw,90px);padding:3px 5px}
   .hud-btn{width:29px;height:28px;font-size:14px}
 }
+
+/* Mobile UX hardening */
+html,body{overscroll-behavior:none}
+#game-shell,#game-shell *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#game-shell input{-webkit-user-select:text;user-select:text}
+.panel,.gun-card,.title-card,#inventory-panel,#loot-panel{overscroll-behavior-y:contain}
+#hud{top:max(6px,env(safe-area-inset-top));left:max(14px,calc(env(safe-area-inset-left) + 8px));right:max(20px,calc(env(safe-area-inset-right) + 8px))}
+.joystick{left:max(20px,calc(env(safe-area-inset-left) + 12px));bottom:max(8px,env(safe-area-inset-bottom))}
+#actions{right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(8px,env(safe-area-inset-bottom))}
+#fullscreen-btn{display:flex;align-items:center;justify-content:center;padding:0;line-height:0}
+#fullscreen-btn svg{display:block;width:58%;height:58%}
